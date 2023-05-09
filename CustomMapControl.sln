@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33530.505
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomMapControl", "CustomMapControl\CustomMapControl.csproj", "{8868B939-CD04-47A4-9D66-4A4BB683F495}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|ARM = Debug|ARM
+		Debug|ARM64 = Debug|ARM64
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|ARM = Release|ARM
+		Release|ARM64 = Release|ARM64
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Debug|ARM.ActiveCfg = Debug|ARM
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Debug|ARM.Build.0 = Debug|ARM
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Debug|ARM.Deploy.0 = Debug|ARM
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Debug|ARM64.ActiveCfg = Debug|ARM64
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Debug|ARM64.Build.0 = Debug|ARM64
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Debug|ARM64.Deploy.0 = Debug|ARM64
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Debug|x64.ActiveCfg = Debug|x64
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Debug|x64.Build.0 = Debug|x64
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Debug|x64.Deploy.0 = Debug|x64
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Debug|x86.ActiveCfg = Debug|x86
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Debug|x86.Build.0 = Debug|x86
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Debug|x86.Deploy.0 = Debug|x86
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Release|ARM.ActiveCfg = Release|ARM
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Release|ARM.Build.0 = Release|ARM
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Release|ARM.Deploy.0 = Release|ARM
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Release|ARM64.ActiveCfg = Release|ARM64
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Release|ARM64.Build.0 = Release|ARM64
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Release|ARM64.Deploy.0 = Release|ARM64
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Release|x64.ActiveCfg = Release|x64
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Release|x64.Build.0 = Release|x64
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Release|x64.Deploy.0 = Release|x64
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Release|x86.ActiveCfg = Release|x86
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Release|x86.Build.0 = Release|x86
+		{8868B939-CD04-47A4-9D66-4A4BB683F495}.Release|x86.Deploy.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EFCC7073-1790-4C7C-BCB6-DF803ED8F065}
+	EndGlobalSection
+EndGlobal
