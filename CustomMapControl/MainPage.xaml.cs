@@ -1,4 +1,5 @@
 ﻿using System;
+using Windows.Devices.Geolocation;
 using Windows.UI.Xaml.Controls;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
@@ -16,9 +17,11 @@ namespace CustomMapControl
             InitializeMap();
         }
 
+        public Geopoint MapCenter { get; set; }
+
         private void InitializeMap()
         {
-            webView.Navigate(new Uri("ms-appx-web:///WebControls/LoadMap.html"));
+            MapCenter = new Geopoint(new BasicGeoposition() { Latitude = 47.6, Longitude = -122.349 });
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿using Windows.Devices.Geolocation;
+﻿using System;
+using System.Threading.Tasks;
+using Windows.Devices.Geolocation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -17,6 +19,7 @@ namespace CustomMapControl.XamlControls
         public MapControl()
         {
             InitializeComponent();
+            webView.Source = new Uri("ms-appx-web:///WebControls/LoadMap.html");
         }
 
         public Geopoint Center
