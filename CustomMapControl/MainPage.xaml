@@ -9,5 +9,8 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <xamlcontrols:MapControl Center="{x:Bind MapCenter, Mode=OneWay}" />
+    <xamlcontrols:MapControl
+        Center="{x:Bind MapCenter, Mode=OneWay}"
+        MapTypeId="{x:Bind MapTypeId, Mode=OneWay}"
+        ZoomLevel="{x:Bind ZoomLevel, Mode=OneWay}" />
 </Page>

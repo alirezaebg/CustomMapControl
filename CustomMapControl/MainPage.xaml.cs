@@ -6,6 +6,18 @@ using Windows.UI.Xaml.Controls;
 
 namespace CustomMapControl
 {
+    public enum MapType
+    {
+        aerial,
+        birdseye,
+        ordnanceSurvey,
+        road,
+        streetside,
+        canvasDark,
+        canvasLight,
+        grayscale,
+        mercator,
+    }
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -19,9 +31,15 @@ namespace CustomMapControl
 
         public Geopoint MapCenter { get; set; }
 
+        public double ZoomLevel { get; set; }
+
+        public string MapTypeId { get; set; }
+
         private void InitializeMap()
         {
             MapCenter = new Geopoint(new BasicGeoposition() { Latitude = 47.6, Longitude = -122.349 });
+            ZoomLevel = 10;
+            MapTypeId = MapType.road.ToString();
         }
     }
 }
