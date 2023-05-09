@@ -1,9 +1,8 @@
 ﻿using System;
 using Windows.Devices.Geolocation;
+using Windows.Foundation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
 namespace CustomMapControl.XamlControls
 {
@@ -51,6 +50,8 @@ namespace CustomMapControl.XamlControls
             set => SetValue(MapTypeIdProperty, value);
         }
 
+        public event TypedEventHandler<MapControl, object> ZoomLevelChanged;
+
         private static void OnCenterPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             MapControl mapControl = (MapControl)d;
@@ -62,6 +63,7 @@ namespace CustomMapControl.XamlControls
         {
             MapControl mapControl = (MapControl)d;
             mapControl.ZoomLevel = (double)e.NewValue;
+            mapControl.OnZoomLevelChanged();
             mapControl.UpdateMap();
         }
 
@@ -70,6 +72,11 @@ namespace CustomMapControl.XamlControls
             MapControl mapControl = (MapControl)d;
             mapControl.MapTypeId = (string)e.NewValue;
             mapControl.UpdateMap();
+        }
+
+        private void OnZoomLevelChanged()
+        {
+            ZoomLevelChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private void UpdateMap()
