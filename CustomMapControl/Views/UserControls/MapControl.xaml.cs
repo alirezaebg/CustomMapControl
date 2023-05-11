@@ -2,6 +2,7 @@
 using Microsoft.Web.WebView2.Core;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -115,12 +116,15 @@ namespace CustomMapControl.Views.UserControls
             if (args.WebMessageAsJson != null)
             {
                 string message = args.WebMessageAsJson;
-                if (double.TryParse(message, out var newZoomLevel))
+                var deseralizeJson = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(message);
+                if (deseralizeJson.ContainsKey("type") && deseralizeJson["type"].ToString() == "zoomChanged")
                 {
-                    ZoomLevel = newZoomLevel;
+                    if (deseralizeJson.ContainsKey("data") && deseralizeJson["data"].TryGetDouble(out double newZoomlevel))
+                    {
+                        ZoomLevel = newZoomlevel;
+                        Debug.WriteLine("Zoom level changed: " + ZoomLevel);
+                    }
                 }
-                
-                Debug.WriteLine("Zoom level changed: " + ZoomLevel);
             }
         }
 
