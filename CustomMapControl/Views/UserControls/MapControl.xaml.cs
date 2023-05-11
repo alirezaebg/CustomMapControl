@@ -1,6 +1,10 @@
 ﻿using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Storage;
@@ -58,6 +62,7 @@ namespace CustomMapControl.Views.UserControls
         private async void InitializeAsync()
         {
             await WebView2.EnsureCoreWebView2Async();
+            ListenToZoomChangedEvent();
             StorageFile htmlFile = await LoadStringFromPackageFileAsync("LoadMap.html");
             WebView2.CoreWebView2.Navigate(htmlFile.Path);
         }
@@ -69,8 +74,10 @@ namespace CustomMapControl.Views.UserControls
             return f;
         }
 
-        private void WebView2_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
+        private async void WebView2_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
         {
+            // might not be necessary to ensure the following line?
+            await WebView2.EnsureCoreWebView2Async();
             UpdateMap();
         }
 
@@ -85,6 +92,35 @@ namespace CustomMapControl.Views.UserControls
             catch (Exception ex)
             {
                 // handle exceptions
+            }
+        }
+
+        private void ListenToZoomChangedEvent()
+        {
+            try
+            {
+                // Wait for the DOM to finish loading
+                // WebView2.CoreWebView2.DOMContentLoaded += WebView2_DOMContentLoaded;
+                WebView2.WebMessageReceived += WebView2_WebMessageReceived;
+            }
+            catch (Exception ex)
+            {
+                // Handle exceptions
+            }
+        }
+
+        private void WebView2_WebMessageReceived(WebView2 sender, CoreWebView2WebMessageReceivedEventArgs args)
+        {
+            // Listen for the message that the zoom level has changed
+            if (args.WebMessageAsJson != null)
+            {
+                string message = args.WebMessageAsJson;
+                if (double.TryParse(message, out var newZoomLevel))
+                {
+                    ZoomLevel = newZoomLevel;
+                }
+                
+                Debug.WriteLine("Zoom level changed: " + ZoomLevel);
             }
         }
 

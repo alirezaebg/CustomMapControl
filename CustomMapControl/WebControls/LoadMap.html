@@ -12,8 +12,26 @@
         }</style>
     <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=wZ2tlfyoMyWywCI9lYEt~bU78_qOMH1YwIYINYUcj-Q~AgZM34duJQYFJ_BsGglzNOjx44yNHz0-oR6xi95bFeLwpnkV2PWRpxsTD6CSvFyK' async defer></script>
     <script type='text/javascript' src='LoadMap.js'></script>
+    <style type='text/css'>
+        #myMap {
+            position: relative;
+            width: 600px;
+            height: 400px;
+        }
+
+        #zoomLevel {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: white;
+            padding: 5px;
+            border: 1px solid black;
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body onload='GetMap(51.50632, -0.12714)'>
     <div id='myMap' style='width: 100vw; height: 100vh;'></div>
+    <div id="zoomLevel"></div>
 </body>
 </html>
