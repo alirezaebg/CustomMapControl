@@ -1,11 +1,15 @@
-﻿using System;
+﻿using Microsoft.UI.Xaml.Controls;
+using Microsoft.Web.WebView2.Core;
+using System;
+using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
 
-namespace CustomMapControl.XamlControls
+namespace CustomMapControl.Views.UserControls
 {
     public sealed partial class MapControl : UserControl
     {
@@ -30,7 +34,7 @@ namespace CustomMapControl.XamlControls
         public MapControl()
         {
             InitializeComponent();
-            webView.Source = new Uri("ms-appx-web:///WebControls/LoadMap.html");
+            InitializeAsync();
         }
 
         public Geopoint Center
@@ -49,6 +53,44 @@ namespace CustomMapControl.XamlControls
         {
             get => (string)GetValue(MapTypeIdProperty);
             set => SetValue(MapTypeIdProperty, value);
+        }
+
+        private async void InitializeAsync()
+        {
+            await WebView2.EnsureCoreWebView2Async();
+            StorageFile htmlFile = await LoadStringFromPackageFileAsync("LoadMap.html");
+            WebView2.CoreWebView2.Navigate(htmlFile.Path);
+        }
+
+        private static async Task<StorageFile> LoadStringFromPackageFileAsync(string name)
+        {
+            // Using the storage classes to read the content from a file as a string.
+            StorageFile f = await StorageFile.GetFileFromApplicationUriAsync(new Uri($"ms-appx:///WebControls/{name}"));
+            return f;
+        }
+
+        private void WebView2_NavigationCompleted(WebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
+        {
+            UpdateMap();
+        }
+
+        private async void RunJavaScriptFunction(string functionName, params object[] args)
+        {
+            try
+            {
+                string script = $"{functionName}({string.Join(",", args)})";
+                string result = await WebView2.ExecuteScriptAsync(script);
+                // process the result if needed
+            }
+            catch (Exception ex)
+            {
+                // handle exceptions
+            }
+        }
+
+        private void UpdateMap()
+        {
+            RunJavaScriptFunction("UpdateMap", Center.Position.Latitude, Center.Position.Longitude, ZoomLevel, $"Microsoft.Maps.MapTypeId.{MapTypeId}");
         }
 
         private static void OnCenterPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -70,31 +112,6 @@ namespace CustomMapControl.XamlControls
             MapControl mapControl = (MapControl)d;
             mapControl.MapTypeId = (string)e.NewValue;
             mapControl.UpdateMap();
-        }
-
-        private void UpdateMap()
-        {
-            if (Center != null)
-            {
-                webView.NavigateToString("<html>" +
-                    "<head>" +
-                    "<title>loadmapwithoptionsHTML</title>" +
-                    "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'/>" +
-                    "<style type='text/css'>body{margin:0;padding:0;overflow:hidden;font-family:'Segoe UI',Helvetica,Arial,Sans-Serif}</style>" +
-                    "</head>" +
-                    "<body>" +
-                    "<div id='printoutPanel'></div><div id='myMap' style='width: 100vw; height: 100vh;'></div><script type='text/javascript'>" +
-                    "function loadMapScenario() " +
-                    "{var map = new Microsoft.Maps.Map(document.getElementById('myMap'), " +
-                    "{/* No need to set credentials if already passed in URL */" +
-                    "center: new Microsoft.Maps.Location(" + Center.Position.Latitude + "," + Center.Position.Longitude + ")," +
-                    "mapTypeId: Microsoft.Maps.MapTypeId." + MapTypeId + "," +
-                    "zoom:" + ZoomLevel + "});" +
-                    "}</script>" +
-                    "<script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=wZ2tlfyoMyWywCI9lYEt~bU78_qOMH1YwIYINYUcj-Q~AgZM34duJQYFJ_BsGglzNOjx44yNHz0-oR6xi95bFeLwpnkV2PWRpxsTD6CSvFyK&callback=loadMapScenario' async defer></script>" +
-                    "</body>" +
-                    "</html>");
-            }
         }
     }
 }
