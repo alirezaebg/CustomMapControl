@@ -17,10 +17,10 @@ namespace CustomMapControl.Models
         public double ZoomLevel { get; set; }
 
         [JsonPropertyName("mapCenter")]
-        public MapLocation MapCenter { get; set; }
+        public Coordinate MapCenter { get; set; }
     }
     
-    public class MapLocation
+    public class Coordinate
     {
         [JsonPropertyName("lattitude")]
         public double Latitude { get; set; }

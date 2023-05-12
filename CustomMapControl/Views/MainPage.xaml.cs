@@ -32,5 +32,9 @@ namespace CustomMapControl
             ZoomLevel = 10;
             MapTypeId = MapType.road.ToString();
         }
+
+        private void MapControl_ZoomLevelChanged(Views.UserControls.MapControl sender, object args)
+        {
+        }
     }
 }

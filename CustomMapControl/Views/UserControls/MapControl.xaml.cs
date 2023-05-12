@@ -2,11 +2,11 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
+using Windows.Foundation;
 using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -40,6 +40,8 @@ namespace CustomMapControl.Views.UserControls
             InitializeComponent();
             InitializeAsync();
         }
+
+        public event TypedEventHandler<MapControl, object> ZoomLevelChanged;
 
         public Geopoint Center
         {
@@ -116,9 +118,16 @@ namespace CustomMapControl.Views.UserControls
                 if (message.Type == "mapStateChanged")
                 {
                     ZoomLevel = message.Data.ZoomLevel;
+                    Coordinate mapCenterCoordinate = message.Data.MapCenter;
+                    Center = new Geopoint(new BasicGeoposition() { Latitude = mapCenterCoordinate.Latitude, Longitude = mapCenterCoordinate.Longitude });
                     Debug.WriteLine($"Zoom level: {ZoomLevel}");
                 }
             }
+        }
+
+        private void OnZoomLevelChanged()
+        {
+            ZoomLevelChanged?.Invoke(this, null);
         }
 
         private void UpdateMap()
@@ -136,6 +145,7 @@ namespace CustomMapControl.Views.UserControls
         {
             MapControl mapControl = (MapControl)d;
             mapControl.ZoomLevel = (double)e.NewValue;
+            mapControl.OnZoomLevelChanged();
         }
 
         private static void OnMapTypeIdPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
