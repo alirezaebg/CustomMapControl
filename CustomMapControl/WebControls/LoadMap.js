@@ -1,5 +1,4 @@
 ﻿var map;
-var zoomChangedTimeout;
 
 function UpdateMap(latitude, longitude, zoomLevel, mapTypeId) {
     map = new Microsoft.Maps.Map(document.getElementById('myMap'), {
@@ -7,20 +6,42 @@ function UpdateMap(latitude, longitude, zoomLevel, mapTypeId) {
         zoom: zoomLevel,
         mapTypeId: mapTypeId,
     });
-    Microsoft.Maps.Events.addHandler(map, 'viewchange', updateZoomLevel);
+    Microsoft.Maps.Events.addHandler(map, 'viewchangeend', updateMapZoom);
+    Microsoft.Maps.Events.addHandler(map, 'viewchangeend', updateMapCenter);
 }
 
-function updateZoomLevel() {
+function updateMapZoom() {
     var zoomLevel = map.getZoom();
     var zoomDiv = document.getElementById('zoomLevel');
     zoomDiv.innerHTML = 'Zoom level: ' + zoomLevel;
-    sendZoomLevel();
+    sendMapUpdate()
 }
 
-function sendZoomLevel() {
-    var val = map.getZoom();
-    // Debounce the zoom event
-    if (val % 0.5 == 0) {
-        window.chrome.webview.postMessage({ "type": "zoomChanged", "data": val });
+function updateMapCenter() {
+    var mapCenter = map.getCenter();
+    var centerDiv = document.getElementById('center');
+    centerDiv.innerHTML = 'center: ' + mapCenter;
+    sendMapUpdate()
+}
+
+
+function sendMapUpdate() {
+    var zoomLevel = map.getZoom();
+    var center = map.getCenter();
+
+    const centerLocation = {
+        "lattitude": center.latitude,
+        "longitude": center.longitude,
     }
+
+    const data = {
+        "mapZoomLevel": zoomLevel,
+        "mapCenter": centerLocation,
+    }
+    const message = {
+        "type": "mapStateChanged",
+        "data": data,
+    };
+
+    window.chrome.webview.postMessage(message);
 }

@@ -28,10 +28,21 @@
             border: 1px solid black;
             z-index: 1000;
         }
+
+        #center {
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            background-color: white;
+            padding: 5px;
+            border: 1px solid black;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body onload='GetMap(51.50632, -0.12714)'>
     <div id='myMap' style='width: 100vw; height: 100vh;'></div>
     <div id="zoomLevel"></div>
+    <div id="center"></div>
 </body>
 </html>

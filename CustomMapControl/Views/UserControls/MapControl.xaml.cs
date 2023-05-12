@@ -1,11 +1,10 @@
-﻿using Microsoft.UI.Xaml.Controls;
+﻿using CustomMapControl.Models;
+using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
 using Windows.Storage;
@@ -63,7 +62,7 @@ namespace CustomMapControl.Views.UserControls
         private async void InitializeAsync()
         {
             await WebView2.EnsureCoreWebView2Async();
-            ListenToZoomChangedEvent();
+            ListenToMapViewChangeEvent();
             StorageFile htmlFile = await LoadStringFromPackageFileAsync("LoadMap.html");
             WebView2.CoreWebView2.Navigate(htmlFile.Path);
         }
@@ -96,12 +95,10 @@ namespace CustomMapControl.Views.UserControls
             }
         }
 
-        private void ListenToZoomChangedEvent()
+        private void ListenToMapViewChangeEvent()
         {
             try
             {
-                // Wait for the DOM to finish loading
-                // WebView2.CoreWebView2.DOMContentLoaded += WebView2_DOMContentLoaded;
                 WebView2.WebMessageReceived += WebView2_WebMessageReceived;
             }
             catch (Exception ex)
@@ -115,15 +112,11 @@ namespace CustomMapControl.Views.UserControls
             // Listen for the message that the zoom level has changed
             if (args.WebMessageAsJson != null)
             {
-                string message = args.WebMessageAsJson;
-                var deseralizeJson = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(message);
-                if (deseralizeJson.ContainsKey("type") && deseralizeJson["type"].ToString() == "zoomChanged")
+                var message = JsonSerializer.Deserialize<MapStateModel>(args.WebMessageAsJson);
+                if (message.Type == "mapStateChanged")
                 {
-                    if (deseralizeJson.ContainsKey("data") && deseralizeJson["data"].TryGetDouble(out double newZoomlevel))
-                    {
-                        ZoomLevel = newZoomlevel;
-                        Debug.WriteLine("Zoom level changed: " + ZoomLevel);
-                    }
+                    ZoomLevel = message.Data.ZoomLevel;
+                    Debug.WriteLine($"Zoom level: {ZoomLevel}");
                 }
             }
         }
