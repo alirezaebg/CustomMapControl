@@ -130,21 +130,18 @@ namespace CustomMapControl.Views.UserControls
         {
             MapControl mapControl = (MapControl)d;
             mapControl.Center = (Geopoint)e.NewValue;
-            mapControl.UpdateMap();
         }
 
         private static void OnZoomLevelPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             MapControl mapControl = (MapControl)d;
             mapControl.ZoomLevel = (double)e.NewValue;
-            mapControl.UpdateMap();
         }
 
         private static void OnMapTypeIdPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             MapControl mapControl = (MapControl)d;
             mapControl.MapTypeId = (string)e.NewValue;
-            mapControl.UpdateMap();
         }
     }
 }
