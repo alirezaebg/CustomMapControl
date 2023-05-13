@@ -5,7 +5,12 @@ function UpdateMap(latitude, longitude, zoomLevel, mapTypeId) {
         center: new Microsoft.Maps.Location(latitude, longitude),
         zoom: zoomLevel,
         mapTypeId: mapTypeId,
+        navigationBarMode: Microsoft.Maps.NavigationBarMode.minified,
     });
+
+    // add a pushpin
+    addPushpin(map.getCenter());
+
     Microsoft.Maps.Events.addHandler(map, 'viewchangeend', updateMapZoom);
     Microsoft.Maps.Events.addHandler(map, 'viewchangeend', updateMapCenter);
 }
@@ -44,4 +49,10 @@ function sendMapUpdate() {
     };
 
     window.chrome.webview.postMessage(message);
+}
+
+function addPushpin(center) {
+    var pushpin = new Microsoft.Maps.Pushpin(center, null);
+    pushpin.setOptions({ icon: '../Assets/mappin.png', anchor: new Microsoft.Maps.Point(12, 39) })
+    map.entities.push(pushpin);
 }
