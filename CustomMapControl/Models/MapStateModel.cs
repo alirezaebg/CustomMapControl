@@ -22,7 +22,13 @@ namespace CustomMapControl.Models
     
     public class Coordinate
     {
-        [JsonPropertyName("lattitude")]
+        public Coordinate(double latitude, double longitude)
+        {
+            Latitude = latitude;
+            Longitude = longitude;
+        }
+
+        [JsonPropertyName("latitude")]
         public double Latitude { get; set; }
 
         [JsonPropertyName("longitude")]

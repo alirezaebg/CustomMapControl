@@ -27,9 +27,10 @@
             padding: 5px;
             border: 1px solid black;
             z-index: 1000;
+            border-radius: 5px;
         }
 
-        #center {
+        #dropPushpins {
             position: absolute;
             top: 50px;
             left: 10px;
@@ -37,12 +38,13 @@
             padding: 5px;
             border: 1px solid black;
             z-index: 1000;
+            font-size: 16px;
+            border-radius:5px;
         }
     </style>
 </head>
 <body onload='GetMap(51.50632, -0.12714)'>
     <div id='myMap' style='width: 100vw; height: 100vh;'></div>
     <div id="zoomLevel"></div>
-    <div id="center"></div>
 </body>
 </html>

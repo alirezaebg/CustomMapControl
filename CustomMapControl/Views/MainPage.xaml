@@ -11,6 +11,7 @@
     <Grid>
         <controls:MapControl
             Center="{x:Bind MapCenter, Mode=OneWay}"
+            Layers="{x:Bind MapLayers, Mode=OneWay}"
             MapTypeId="{x:Bind MapTypeId, Mode=OneWay}"
             ZoomLevel="{x:Bind ZoomLevel, Mode=OneWay}"
             ZoomLevelChanged="MapControl_ZoomLevelChanged" />

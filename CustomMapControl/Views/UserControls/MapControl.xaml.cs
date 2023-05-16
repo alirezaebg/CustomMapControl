@@ -2,6 +2,7 @@
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.Web.WebView2.Core;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -35,6 +36,12 @@ namespace CustomMapControl.Views.UserControls
             typeof(MapControl),
             new PropertyMetadata("road", OnMapTypeIdPropertyChanged));
 
+        public static readonly DependencyProperty LayersProperty = DependencyProperty.Register(
+            "Layers",
+            typeof(IList<MapLayer>),
+            typeof(MapControl),
+            new PropertyMetadata(null, OnMapLayersPropertyChanged));
+
         public MapControl()
         {
             InitializeComponent();
@@ -61,12 +68,19 @@ namespace CustomMapControl.Views.UserControls
             set => SetValue(MapTypeIdProperty, value);
         }
 
+        public IList<MapLayer> Layers
+        {
+            get => (IList<MapLayer>)GetValue(LayersProperty);
+            set => SetValue(LayersProperty, value);
+        }
+
         private async void InitializeAsync()
         {
             await WebView2.EnsureCoreWebView2Async();
             ListenToMapViewChangeEvent();
             StorageFile htmlFile = await LoadStringFromPackageFileAsync("LoadMap.html");
             WebView2.CoreWebView2.Navigate(htmlFile.Path);
+            WebView2.CoreWebView2.OpenDevToolsWindow();
         }
 
         private static async Task<StorageFile> LoadStringFromPackageFileAsync(string name)
@@ -81,20 +95,6 @@ namespace CustomMapControl.Views.UserControls
             // might not be necessary to ensure the following line?
             await WebView2.EnsureCoreWebView2Async();
             UpdateMap();
-        }
-
-        private async void RunJavaScriptFunction(string functionName, params object[] args)
-        {
-            try
-            {
-                string script = $"{functionName}({string.Join(",", args)})";
-                string result = await WebView2.ExecuteScriptAsync(script);
-                // process the result if needed
-            }
-            catch (Exception ex)
-            {
-                // handle exceptions
-            }
         }
 
         private void ListenToMapViewChangeEvent()
@@ -132,7 +132,24 @@ namespace CustomMapControl.Views.UserControls
 
         private void UpdateMap()
         {
-            RunJavaScriptFunction("UpdateMap", Center.Position.Latitude, Center.Position.Longitude, ZoomLevel, $"Microsoft.Maps.MapTypeId.{MapTypeId}");
+            RunJavaScriptFunction("updateMap", Center.Position.Latitude, Center.Position.Longitude, ZoomLevel, $"Microsoft.Maps.MapTypeId.{MapTypeId}");
+
+            string json = JsonSerializer.Serialize(Layers);
+            RunJavaScriptFunction("addPushpinsFromLayers", json);
+        }
+
+        private async void RunJavaScriptFunction(string functionName, params object[] args)
+        {
+            try
+            {
+                string script = $"{functionName}({string.Join(",", args)})";
+                string result = await WebView2.ExecuteScriptAsync(script);
+                // process the result if needed
+            }
+            catch (Exception ex)
+            {
+                // handle exceptions
+            }
         }
 
         private static void OnCenterPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -152,6 +169,12 @@ namespace CustomMapControl.Views.UserControls
         {
             MapControl mapControl = (MapControl)d;
             mapControl.MapTypeId = (string)e.NewValue;
+        }
+
+        private static void OnMapLayersPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            MapControl mapControl = (MapControl)d;
+            mapControl.Layers = (IList<MapLayer>)e.NewValue;
         }
     }
 }
